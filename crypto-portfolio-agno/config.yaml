@@ -1,0 +1,36 @@
+# Configuração do Dashboard de Portfolio Binance com Agentes IA
+
+llm:
+  provider: "openai"  # openai, deepseek, qwen, anthropic, groq
+  model: "gpt-4o"  # gpt-4o, deepseek-chat, qwen-plus, claude-3-5-sonnet-20241022, etc
+  api_key: "${OPENAI_API_KEY}"  # usar variável de ambiente
+  temperature: 0.7
+  max_tokens: 4000
+
+ui:
+  theme: "dark"
+  colors:
+    background: "#0A0E27"
+    text: "#FFFFFF"
+    accent_red: "#FF3B3B"
+    accent_green: "#4CAF50"
+    accent_cyan: "#00D9FF"
+  refresh_interval: 30  # segundos para atualização de preços
+
+database:
+  sqlite_path: "data/portfolio.db"
+  vector_db_path: "data/vectordb"
+
+cache:
+  redis_host: "localhost"
+  redis_port: 6379
+  redis_db: 0
+  ttl_prices: 30  # segundos
+  ttl_portfolio: 300  # 5 minutos
+  ttl_analysis: 3600  # 1 hora
+
+agents:
+  enable_memory: true
+  enable_vector_db: false  # ativar após MVP com 30+ dias de dados
+  learning_mode: true  # feedback loops para aprendizado
+  background_jobs: false  # análises em background (implementar depois do MVP)
