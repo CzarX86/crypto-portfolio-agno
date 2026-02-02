@@ -31,6 +31,52 @@ cache:
 
 agents:
   enable_memory: true
-  enable_vector_db: false  # ativar após MVP com 30+ dias de dados
+  enable_vector_db: true  # Qdrant local
   learning_mode: true  # feedback loops para aprendizado
-  background_jobs: false  # análises em background (implementar depois do MVP)
+  background_jobs: true  # análises diárias e jobs de otimização
+
+  meta_orchestrator:
+    llm_provider: "openai"
+    model: "gpt-4o"
+    temperature: 0.7
+  
+  meta_learning_optimizer:
+    phase: "heuristic"  # heuristic (Phase 2) → bayesian (Phase 3)
+    strategy: "thompson_sampling"
+    auto_apply: false
+    min_data_points: 100
+    revert_if_worse: true
+    hold_out_period: 7  # dias para validação
+    heuristic_rules:
+      accuracy_threshold_down: 0.60
+      weight_penalty_if_poor: 0.10
+      weight_boost_if_good: 0.10
+      trend_lookback_days: 14
+  
+  crypto_expert_agent:
+    enabled: true
+    data_sources:
+      - "binance_announcements"
+      - "on_chain_data"
+      - "social_sentiment"
+      - "macro_crypto_news"
+    update_frequency: "1h"
+    confidence_min: 0.40
+
+  portfolio_analyzer:
+    enabled: true
+    max_assets: 5
+    rebalance_threshold: 0.05
+
+database:
+  sqlite_path: "portfolio_memory.db"
+  vector_db: "qdrant"
+  qdrant_url: "localhost:6333"
+
+api_keys:
+  binance: "${BINANCE_API_KEY}"
+  finnhub: "${FINNHUB_KEY}"
+  newsapi: "${NEWSAPI_KEY}"
+  coingecko: "${COINGECKO_KEY}"
+  openai: "${OPENAI_API_KEY}"
+  # cryptography_key: "${FERNET_KEY}" # Para encriptação de chaves da Binance
